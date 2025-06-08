@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/test/java/testauto/com/ui/utils_tester/TestUtilitiesUnderDev.java
+/logs/
