@@ -23,8 +23,8 @@ public class LogUtil {
         getLogger(callerClass).error(message);
     }
 
-    public static <E extends Exception> void error(String message, Class<?> callerClass, E e){
-        getLogger(callerClass).error(message,e);
+    public static <T extends Throwable> void error(String message, Class<?> callerClass, T throwable){
+        getLogger(callerClass).error(message,throwable);
     }
 
     public static <T extends Throwable> void logAndRethrow(String message, Class<?> callerClass, T throwable) throws T {
