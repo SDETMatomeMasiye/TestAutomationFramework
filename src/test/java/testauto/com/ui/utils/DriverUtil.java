@@ -117,7 +117,7 @@ public class DriverUtil {
 
     @SuppressWarnings("unchecked")
     public static <T extends WebDriver> T getDriver(Class<T> targetDriver){
-        String errorMessage = "Couldn't get '" + targetDriver + "' webDriver because %s == null. Call %s(String propertiesPath) first.";
+        String errorMessage = "Couldn't get '" + targetDriver.getSimpleName() + "' because %s == null. Call %s(String propertiesPath) first.";
         if(IOSDriver.class.isAssignableFrom(targetDriver) || AndroidDriver.class.isAssignableFrom(targetDriver)){
             Objects.requireNonNull(mobileDriver, String.format(errorMessage, "mobileDriver", "initializeMobileDriver"));
             return (T) mobileDriver;
