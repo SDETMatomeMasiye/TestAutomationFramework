@@ -13,15 +13,13 @@ import java.time.Duration;
 @Slf4j
 public class WaitsUtil {
     private final WebDriver driver;
-    private final PageObjectsUtil pageObjects;
     private static final int DEFAULT_TIMEOUT = 10;
 
-    public WaitsUtil(WebDriver driver, String filePath) {
+    public WaitsUtil(WebDriver driver) {
         if(driver == null){
-            throw new IllegalArgumentException("Cannot instantiate ActionsUtil with a null driver.");
+            throw new IllegalArgumentException("Cannot instantiate WaitsUtil with a null driver.");
         }
         this.driver = driver;
-        pageObjects = new PageObjectsUtil(filePath);
     }
 
     private FluentWait<WebDriver> getWait(int timeout){
@@ -31,9 +29,8 @@ public class WaitsUtil {
                 .ignoring(NoSuchElementException.class);
     }
 
-    public void waitForElementToBePresent(String element, boolean mustExist, int timeout) throws Exception {
+    public void waitForElementToBePresent(String element, By elementBy, boolean mustExist, int timeout) throws Exception {
         try {
-            By elementBy = pageObjects.getElementBy(element);
             FluentWait<WebDriver> wait = getWait(timeout);
             wait.until(ExpectedConditions.presenceOfElementLocated(elementBy));
             LogUtil.info("Element '" + element + "' is present on the DOM.", WaitsUtil.class);
@@ -47,13 +44,12 @@ public class WaitsUtil {
         }
     }
 
-    public void waitForElementToBePresent(String element, boolean mustExist) throws Exception {
-        waitForElementToBePresent(element, mustExist, DEFAULT_TIMEOUT);
+    public void waitForElementToBePresent(String element, By elementBy, boolean mustExist) throws Exception {
+        waitForElementToBePresent(element, elementBy, mustExist, DEFAULT_TIMEOUT);
     }
 
-    public void waitForElementToBeDisplayed(String element, boolean mustExist, int timeout) throws Exception {
+    public void waitForElementToBeDisplayed(String element, By elementBy, boolean mustExist, int timeout) throws Exception {
         try {
-            By elementBy = pageObjects.getElementBy(element);
             FluentWait<WebDriver> wait = getWait(timeout);
             wait.until(ExpectedConditions.visibilityOfElementLocated(elementBy));
             LogUtil.info("Element '" + element + "' is displayed.", WaitsUtil.class);
@@ -67,13 +63,12 @@ public class WaitsUtil {
         }
     }
 
-    public void waitForElementToBeDisplayed(String element, boolean mustExist) throws Exception {
-        waitForElementToBeDisplayed(element, mustExist, DEFAULT_TIMEOUT);
+    public void waitForElementToBeDisplayed(String element,By elementBy, boolean mustExist) throws Exception {
+        waitForElementToBeDisplayed(element, elementBy, mustExist, DEFAULT_TIMEOUT);
     }
 
-    public void waitForElementToBeClickable(String element, int timeout) throws Exception {
+    public void waitForElementToBeClickable(String element, By elementBy, int timeout) throws Exception {
         try {
-            By elementBy = pageObjects.getElementBy(element);
             FluentWait<WebDriver> wait = getWait(timeout);
             wait.until(ExpectedConditions.elementToBeClickable(elementBy));
             LogUtil.info("Element '" + element + "' is clickable.", WaitsUtil.class);
@@ -82,13 +77,12 @@ public class WaitsUtil {
         }
     }
 
-    public void waitForElementToBeClickable(String element) throws Exception {
-        waitForElementToBeClickable(element, DEFAULT_TIMEOUT);
+    public void waitForElementToBeClickable(String element, By elementBy) throws Exception {
+        waitForElementToBeClickable(element, elementBy, DEFAULT_TIMEOUT);
     }
 
-    public void waitForFrameAndSwitchToIt(String element, int timeout) throws Exception {
+    public void waitForFrameAndSwitchToIt(String element, By frame, int timeout) throws Exception {
         try{
-            By frame = pageObjects.getElementBy(element);
             FluentWait<WebDriver> wait = getWait(timeout);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frame));
             LogUtil.info("Switched to frame '" + element + "' after it became available.", WaitsUtil.class);
@@ -97,13 +91,12 @@ public class WaitsUtil {
         }
     }
 
-    public void waitForFrameAndSwitchToIt(String element) throws Exception {
-        waitForFrameAndSwitchToIt(element, DEFAULT_TIMEOUT);
+    public void waitForFrameAndSwitchToIt(String element, By elementBy) throws Exception {
+        waitForFrameAndSwitchToIt(element, elementBy,DEFAULT_TIMEOUT);
     }
 
-    public void waitForElementToDisappear(String element, int timeout) throws Exception {
+    public void waitForElementToDisappear(String element,By elementBy, int timeout) throws Exception {
         try{
-            By elementBy = pageObjects.getElementBy(element);
             FluentWait<WebDriver> wait = getWait(timeout);
             wait.until(ExpectedConditions.invisibilityOfElementLocated(elementBy));
             LogUtil.info("Element '" + element + "' is invisible.", WaitsUtil.class);
@@ -112,8 +105,8 @@ public class WaitsUtil {
         }
     }
 
-    public void waitForElementToDisappear(String element) throws Exception {
-        waitForElementToDisappear(element, DEFAULT_TIMEOUT);
+    public void waitForElementToDisappear(String element,By elementBy) throws Exception {
+        waitForElementToDisappear(element,elementBy, DEFAULT_TIMEOUT);
     }
 
 }
