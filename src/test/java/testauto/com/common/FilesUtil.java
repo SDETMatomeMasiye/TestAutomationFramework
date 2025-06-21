@@ -105,7 +105,7 @@ public class FilesUtil {
         for(Cell cell: columnHeadings){
             String currentCellAsString = new DataFormatter().formatCellValue(cell);
             if(currentCellAsString.equalsIgnoreCase(columnName.strip())){
-                return cell.getColumnIndex();
+                columnIndex =  cell.getColumnIndex();
             }
         }
 
