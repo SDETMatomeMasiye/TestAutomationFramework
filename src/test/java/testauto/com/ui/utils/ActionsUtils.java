@@ -24,6 +24,7 @@ public class ActionsUtils {
             By elementBy = pageObjects.getElementBy(element);
             waits.waitForElementToBeClickable(element, elementBy, timeout);
             driver.findElement(elementBy).click();
+            LogUtil.info("Clicked on '" + element + "'", ActionsUtils.class);
         }catch (Exception e){
             LogUtil.logAndRethrow("Error while attempting click on '" + element + "'.", ActionsUtils.class, e);
         }
@@ -40,6 +41,7 @@ public class ActionsUtils {
             WebElement field = driver.findElement(elementBy);
             field.clear();
             field.sendKeys(data);
+            LogUtil.info("Entered '" + data + "' into '" + element + "'", ActionsUtils.class);
         }catch (Exception e){
             LogUtil.logAndRethrow("Error while attempting to enter '" + data + "' into '" + element + "'.", ActionsUtils.class, e);
         }
@@ -59,19 +61,27 @@ public class ActionsUtils {
             switch(strategy.toLowerCase()){
                 case "visible_text":
                     select.selectByVisibleText(String.valueOf(data));
+                    LogUtil.info("Selected by visible text '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "contains_visible_text":
                     select.selectByContainsVisibleText(String.valueOf(data));
+                    LogUtil.info("Selected by contains visible text '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "value":
                     select.selectByValue(String.valueOf(data));
+                    LogUtil.info("Selected by value '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "index":
-                    if(data instanceof Integer) select.selectByIndex((int) data);
-                    else throw new IllegalArgumentException("Index has to be of integer type.");
+                    if(data instanceof Integer) {
+                        select.selectByIndex((int) data);
+                        LogUtil.info("Selected by index '" + data + "' from '" + element + "'", ActionsUtils.class);
+                    } else {
+                        throw new IllegalArgumentException("Index has to be of integer type.");
+                    }
                     break;
                 default:
-                    throw new IllegalArgumentException("'" + strategy + "' is not a supported selection strategy. Supported selection include: visible_text, contains_visible_text, value and index.");
+                    String message = "'" + strategy.toLowerCase() + "' is not a supported selection strategy. Supported selection include: visible_text, contains_visible_text, value and index.";
+                    throw new IllegalArgumentException(message);
             }
 
         }catch (Exception e){
@@ -80,7 +90,7 @@ public class ActionsUtils {
     }
 
     public <T> void select(String element, String strategy, T data) throws Exception {
-       select(element, DEFAULT_TIMEOUT, strategy, data);
+        select(element, DEFAULT_TIMEOUT, strategy, data);
     }
 
     public <T> void deselect(String element,int timeout, String strategy, T data) throws Exception {
@@ -93,26 +103,35 @@ public class ActionsUtils {
             switch(strategy.toLowerCase()){
                 case "visible_text":
                     select.deselectByVisibleText(String.valueOf(data));
+                    LogUtil.info("Deselected by visible text '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "contains_visible_text":
                     select.deSelectByContainsVisibleText(String.valueOf(data));
+                    LogUtil.info("Deselected by contains visible text '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "value":
                     select.deselectByValue(String.valueOf(data));
+                    LogUtil.info("Deselected by value '" + data + "' from '" + element + "'", ActionsUtils.class);
                     break;
                 case "index":
-                    if(data instanceof Integer) select.deselectByIndex((int) data);
-                    else throw new IllegalArgumentException("Index has to be of integer type.");
+                    if(data instanceof Integer) {
+                        select.deselectByIndex((int) data);
+                        LogUtil.info("Deselected by index '" + data + "' from '" + element + "'", ActionsUtils.class);
+                    } else {
+                        throw new IllegalArgumentException("Index has to be of integer type.");
+                    }
                     break;
                 case "all":
                     select.deselectAll();
+                    LogUtil.info("Deselected all options from '" + element + "'", ActionsUtils.class);
                     break;
                 default:
-                    throw new IllegalArgumentException("'" + strategy.toLowerCase() + "' is not a supported selection strategy. Supported selection include: visible_text, contains_visible_text, value, index and all.");
+                    String message = "'" + strategy.toLowerCase() + "' is not a supported selection strategy. Supported selection include: visible_text, contains_visible_text, value, index and all.";
+                    throw new IllegalArgumentException(message);
             }
 
         }catch (Exception e){
-            LogUtil.logAndRethrow("Error while attempting to select '" + data + "' from '" + element + "'.", ActionsUtils.class, e);
+            LogUtil.logAndRethrow("Error while attempting to deselect '" + data + "' from '" + element + "'.", ActionsUtils.class, e);
         }
     }
 
