@@ -1,10 +1,13 @@
 package testauto.com.ui.utils;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import testauto.com.common.LogUtil;
+
+import java.util.Objects;
 
 public class ActionsUtils {
 
@@ -12,9 +15,12 @@ public class ActionsUtils {
     private final WaitsUtil waits;
     private final PageObjectsUtil pageObjects;
     private static final int DEFAULT_TIMEOUT = 10;
+    private final JavascriptExecutor jsExecutor;
 
     public ActionsUtils(WebDriver driver, String pageObjectsFilePath){
+        Objects.requireNonNull(driver,"Cannot instantiate ActionsUtil with a null driver reference.");
         this.driver = driver;
+        jsExecutor = (JavascriptExecutor) driver;
         waits = new WaitsUtil(driver);
         pageObjects = new PageObjectsUtil(pageObjectsFilePath);
     }
@@ -126,5 +132,66 @@ public class ActionsUtils {
         deselect(element, DEFAULT_TIMEOUT, strategy, data);
     }
 
+    public void clickWithJs(String element, boolean mustExist, int timeout) throws Exception {
+        try{
+            By elementBy = pageObjects.getElementBy(element);
+            waits.waitForElementToBePresent(element, elementBy, mustExist, timeout);
+            String script = "arguments[0].click();";
+            jsExecutor.executeScript(script, driver.findElement(elementBy));
+            LogUtil.info("Clicked on element '" + element + "' with javascript executor.", ActionsUtils.class);
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting click on element '" + element + "' with javascript executor.", ActionsUtils.class, e);
+        }
+    }
 
+    public void clickWithJs(String element, boolean mustExist) throws Exception {
+        clickWithJs(element, mustExist, DEFAULT_TIMEOUT);
+    }
+
+    public void scrollToBottom() throws Exception {
+        try{
+            String script = "window.scrollTo(0,document.body.scrollHeight);";
+            jsExecutor.executeScript(script);
+            LogUtil.info("Scrolled to the bottom of the screen.", ActionsUtils.class);
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while scrolling to the bottom.", ActionsUtils.class, e);
+        }
+    }
+
+    public void scrollToElement(String element, boolean mustExist, int timeout) throws Exception {
+        try{
+            By elementBy = pageObjects.getElementBy(element);
+            waits.waitForElementToBeDisplayed(element, elementBy, mustExist, timeout);
+            jsExecutor.executeScript("arguments[0].scrollIntoView({block:'center'});", driver.findElement(elementBy));
+            LogUtil.info("Scrolled to element '" + element + "'.", ActionsUtils.class);
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting scroll to element '" + element + "'.", ActionsUtils.class, e);
+        }
+    }
+
+    public void scrollToElement(String element, boolean mustExist) throws Exception {
+        scrollToElement(element, mustExist, DEFAULT_TIMEOUT);
+    }
+
+    public void scrollBy(int x, int y) throws Exception {
+        try{
+            String script = String.format("window.scrollBy(%d,%d);", x, y);
+            jsExecutor.executeScript(script);
+            LogUtil.info("Scrolled by x: " + x + ", y: " + y, ActionsUtils.class);
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting to scroll by x=" + x + " and y=" + y + ".", ActionsUtils.class, e);
+        }
+    }
+
+    public void enterDataWithJs(String element, boolean mustExist, String data, int timeout) throws Exception {
+        try{
+            By elementBy = pageObjects.getElementBy(element);
+            waits.waitForElementToBePresent(element, elementBy, mustExist, timeout);
+            String script = "arguments[0].value='" + data.replace("'","\\'") + "';";
+            jsExecutor.executeScript(script, driver.findElement(elementBy));
+            LogUtil.info("Successfully set value '" + data + "' into field '" + element + "'.", ActionsUtils.class);
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting to set value '" + data + "' with javascript executor into field '" + element +  "'.", ActionsUtils.class, e);
+        }
+    }
 }
