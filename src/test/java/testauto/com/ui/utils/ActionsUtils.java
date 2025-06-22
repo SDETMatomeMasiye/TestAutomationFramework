@@ -1,13 +1,16 @@
 package testauto.com.ui.utils;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import lombok.extern.java.Log;
+import org.apache.poi.sl.draw.geom.GuideIf;
+import org.openqa.selenium.*;
+import org.openqa.selenium.bidi.module.LogInspector;
 import org.openqa.selenium.support.ui.Select;
 import testauto.com.common.LogUtil;
 
+import javax.swing.text.html.Option;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ActionsUtils {
 
@@ -194,4 +197,77 @@ public class ActionsUtils {
             LogUtil.logAndRethrow("Error while attempting to set value '" + data + "' with javascript executor into field '" + element +  "'.", ActionsUtils.class, e);
         }
     }
+
+    private Optional<Alert> getAlertIfPresent(){
+        try{
+            Alert alert = driver.switchTo().alert();
+            return Optional.of(alert);
+        }catch (NoAlertPresentException e){
+            return Optional.empty();
+        }
+    }
+
+    public void acceptAlert() throws Exception {
+        try{
+            Optional<Alert> alert = getAlertIfPresent();
+            if(alert.isPresent()){
+                LogUtil.info("Alert is present.", ActionsUtils.class);
+                alert.get().accept();
+                LogUtil.info("Accepted alert.", ActionsUtils.class);
+            }else{
+                LogUtil.info("Alert is not present.", ActionsUtils.class);
+            }
+        }catch (Exception e){
+
+            LogUtil.logAndRethrow("Error while attempting to accept an alert box.", ActionsUtils.class, e);
+        }
+    }
+
+    public void dismissAlert() throws Exception {
+        try{
+            Optional<Alert> alert = getAlertIfPresent();
+            if(alert.isPresent()){
+                LogUtil.info("Alert is present.", ActionsUtils.class);
+                alert.get().dismiss();
+                LogUtil.info("Dismissed alert.", ActionsUtils.class);
+            }else{
+                LogUtil.info("Alert is not present.", ActionsUtils.class);
+            }
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting to dismiss alert", ActionsUtils.class, e);
+        }
+    }
+
+    public Optional<String> getTextFromAlert() throws Exception {
+        try{
+            Optional<Alert> alert = getAlertIfPresent();
+            if(alert.isPresent()){
+                LogUtil.info("Alert is present.", ActionsUtils.class);
+                String extractedText = alert.get().getText();
+                LogUtil.info("Extracted text '" + extractedText + "' from alert.", ActionsUtils.class);
+                return Optional.of(extractedText);
+            }else{
+                LogUtil.info("Alert is not present.", ActionsUtils.class);
+            }
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting to extract text from alert.", ActionsUtils.class, e);
+        }
+        return Optional.empty();
+    }
+
+    public void enterDataToPromptBox(String data) throws Exception {
+        try{
+            Optional<Alert> alert = getAlertIfPresent();
+            if(alert.isPresent()){
+                LogUtil.info("Alert is present.", ActionsUtils.class);
+                alert.get().sendKeys(data);
+                LogUtil.info("Entered '" + data + "' to prompt box.", ActionsUtils.class);
+            }else{
+                LogUtil.info("Alert is not present.", ActionsUtils.class);
+            }
+        }catch (Exception e){
+            LogUtil.logAndRethrow("Error while attempting to enter data into prompt box.", ActionsUtils.class, e);
+        }
+    }
+
 }
