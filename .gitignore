@@ -38,3 +38,4 @@ build/
 .DS_Store
 /src/test/java/testauto/com/ui/utils_tester/TestUtilitiesUnderDev.java
 /logs/
+/src/test/java/testauto/com/api/tests/ApiUtilsTester.java

@@ -1,0 +1,8 @@
+<PageObjects>
+    <TestApp>
+        <element name='ShowAlertBox' by='xpath'>//input[@onClick='show_alert()']</element>
+        <element name='ShowConfirmBox' by='xpath'>//input[@onClick='show_confirm()']</element>
+        <element name='ShowPromptBox' by='xpath'>//input[@onClick='show_prompt()']</element>
+        <element name='ClickForJsPrompt' by='xpath'>//button[text()='Click for JS Prompt']</element>
+    </TestApp>
+</PageObjects>

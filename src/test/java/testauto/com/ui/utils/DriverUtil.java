@@ -13,15 +13,11 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import testauto.com.common.FilesUtil;
 import testauto.com.common.LogUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 import static testauto.com.common.FilesUtil.getPropertyValue;

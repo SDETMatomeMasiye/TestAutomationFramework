@@ -1,14 +1,12 @@
 package testauto.com.ui.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import testauto.com.common.LogUtil;
 import java.time.Duration;
+import java.util.Objects;
 
 @Slf4j
 public class WaitsUtil {
@@ -67,18 +65,20 @@ public class WaitsUtil {
         waitForElementToBeDisplayed(element, elementBy, mustExist, DEFAULT_TIMEOUT);
     }
 
-    public void waitForElementToBeClickable(String element, By elementBy, int timeout) throws Exception {
+    public WebElement waitForElementToBeClickable(String element, By elementBy, int timeout){
+        WebElement webElement = null;
         try {
             FluentWait<WebDriver> wait = getWait(timeout);
-            wait.until(ExpectedConditions.elementToBeClickable(elementBy));
+            webElement = wait.until(ExpectedConditions.elementToBeClickable(elementBy));
             LogUtil.info("Element '" + element + "' is clickable.", WaitsUtil.class);
         } catch (TimeoutException e) {
             LogUtil.logAndRethrow("Timed out after " + timeout + " seconds while waiting for element '" + element + "' to be clickable.", WaitsUtil.class, e);
         }
+        return Objects.requireNonNull(webElement, "Value of WebElement cannot be null.");
     }
 
-    public void waitForElementToBeClickable(String element, By elementBy) throws Exception {
-        waitForElementToBeClickable(element, elementBy, DEFAULT_TIMEOUT);
+    public WebElement waitForElementToBeClickable(String element, By elementBy) throws Exception {
+        return waitForElementToBeClickable(element, elementBy, DEFAULT_TIMEOUT);
     }
 
     public void waitForFrameAndSwitchToIt(String element, By frame, int timeout) throws Exception {
