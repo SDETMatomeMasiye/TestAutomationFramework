@@ -3,10 +3,12 @@ package testauto.com.common;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
+import io.restassured.response.Response;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -41,7 +43,7 @@ public class ReportUtil {
         }
 
         timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss"));
-        LogUtil.debug("Set timestamp: " + timeStamp + ".", ReportUtil.class);
+        LogUtil.info("Set timestamp: " + timeStamp + ".", ReportUtil.class);
         return  "target/reports/" + testClass.getSimpleName()  + "/" + environment + "/automation_" + timeStamp + ".html";
     }
 
@@ -58,6 +60,20 @@ public class ReportUtil {
         }else {
             throw new IllegalArgumentException("'" + status + "' is not a supported status.");
         }
+    }
+
+    public static void reportAPI(String status, String message, ExtentTest node, Response response){
+        if(node == null) throw new IllegalArgumentException("node cannot be null.");
+        if(status.equalsIgnoreCase("pass")){
+            node.pass(message);
+        }else if(status.equalsIgnoreCase("fail")){
+            node.fail(message);
+        }else if(status.equalsIgnoreCase("info")){
+            node.info(message);
+        }else {
+            throw new IllegalArgumentException("'" + status + "' is not a supported status.");
+        }
+        node.info(MarkupHelper.createCodeBlock(response.asString()));
     }
 
     private static Media takeScreenshot(String platform){
